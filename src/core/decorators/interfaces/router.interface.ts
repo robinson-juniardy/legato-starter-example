@@ -6,3 +6,7 @@ export interface IRouter {
   middlewares: Function[];
   extensions?: any[];
 }
+
+export interface IRegisterOptions {
+  path: string;
+}
