@@ -92,12 +92,14 @@ export abstract class Routes {
   }
 
   static register(options: IRegisterOptions[]) {
+    const routergroups = [];
     for (let opt of options) {
       let ctx = getControllers(opt.path);
       let router = ctx.map((controller) => {
         return createRouters(controller);
       });
-      return router;
+      routergroups.push(router);
     }
+    return routergroups;
   }
 }
