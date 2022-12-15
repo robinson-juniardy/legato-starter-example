@@ -2,10 +2,19 @@ import path from "path";
 import fs from "fs";
 import { ExtractControllerMetadata } from "../decorators/utils";
 import express, { Handler } from "express";
-import { IRouter } from "../decorators/interfaces/router.interface";
+import {
+  IRouter,
+  IRegisterOptions,
+} from "../decorators/interfaces/router.interface";
 
-export function getControllers() {
-  const basepath = path.join(process.cwd(), "src/app");
+export function Register(options: Partial<IRegisterOptions>[]) {
+  for (let opt of options) {
+    return getControllers(opt.path);
+  }
+}
+
+export function getControllers(pathname: string) {
+  const basepath = path.join(process.cwd(), pathname);
 
   const main_app_project_list = fs.readdirSync(basepath);
   let main_app_fullpath_dir_list: string[] = [];
@@ -75,10 +84,20 @@ export function createRouters<T>(Controller: new (...args: any[]) => T) {
 
 export abstract class Routes {
   static autoload() {
-    let ctx = getControllers();
+    let ctx = getControllers("src/app");
     let crouter = ctx.map((controller) => {
       return createRouters(controller);
     });
     return crouter;
+  }
+
+  static register(options: IRegisterOptions[]) {
+    for (let opt of options) {
+      let ctx = getControllers(opt.path);
+      let router = ctx.map((controller) => {
+        return createRouters(controller);
+      });
+      return router;
+    }
   }
 }
