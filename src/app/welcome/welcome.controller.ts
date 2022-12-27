@@ -9,9 +9,11 @@ import WelcomeService from "./welcome.service";
 export default class Welcome {
   constructor(private welcomeService: WelcomeService = new WelcomeService()) {}
   @Http.Get({
-    path: "/message",
+    path: "/",
   })
   PrintMessage(request: Request, response: Response) {
-    response.json(this.welcomeService.Print());
+    response.render("pages/welcome", {
+      pageTitle: "Welcome Page",
+    });
   }
 }
