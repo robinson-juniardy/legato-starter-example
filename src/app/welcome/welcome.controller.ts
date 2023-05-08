@@ -12,8 +12,12 @@ export default class Welcome {
     path: "/",
   })
   PrintMessage(request: Request, response: Response) {
-    response.render("pages/welcome", {
-      pageTitle: "Welcome Page",
-    });
+    if (request.session["passport"]) {
+      response.render("pages/welcome", {
+        title: "Welcome Page",
+      });
+    } else {
+      response.redirect("/home");
+    }
   }
 }
